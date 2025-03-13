@@ -1,0 +1,10 @@
+langchain
+langchain_ollama
+langchain_core
+typing_extensions
+langgraph
+fastapi
+langserve
+uvicorn
+sse_starlette
+pydantic

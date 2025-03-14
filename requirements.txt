@@ -11,4 +11,3 @@ pydantic
 numpy
 python-multipart
 gunicorn
-fcntl

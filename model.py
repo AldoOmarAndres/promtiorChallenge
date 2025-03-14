@@ -19,9 +19,10 @@ from langchain_ollama import ChatOllama
 
 llm = ChatOllama(
     model = "llama3.2:1b",
+    timeout=3000,
     temperature = 0.8,
     num_predict = 256,
-    base_url="https://llamav2-e7bhf8d3g5epayaa.eastus-01.azurewebsites.net",
+    base_url="https://llama.nicewave-4dff44cf.eastus.azurecontainerapps.io",
 )
 
 embeddings = OllamaEmbeddings(model="llama3.2:1b")

@@ -5,18 +5,24 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough
 import uvicorn
 from model import get_graph
+from fastapi.middleware.cors import CORSMiddleware
 from langchain_core.runnables import Runnable
 
 graph = get_graph()
 
-# Inicializar la aplicación FastAPI
+
 app = FastAPI()
 
-# 1. Define el modelo de entrada Pydantic
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 class QuestionInput(BaseModel):
     question: str
 
-# 2. Crea el prompt template personalizado
 custom_prompt = ChatPromptTemplate.from_template(
     """Responde en español usando este contexto:
 {context}
@@ -24,14 +30,12 @@ Pregunta: {question}
 """
 )
 
-# 3. Adaptadores de entrada/salida
 def prepare_input(data: dict) -> dict:
     return {"question": data["question"]}
 
 def extract_output(state: dict) -> dict:
     return {"answer": state["answer"]}
 
-# 4. Cadena de ejecución completa
 chain = (
     RunnablePassthrough()
     | {

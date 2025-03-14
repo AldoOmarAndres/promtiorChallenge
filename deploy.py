@@ -13,6 +13,7 @@ graph = get_graph()
 
 app = FastAPI()
 
+# Por las dudas habilito todos
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -23,6 +24,7 @@ app.add_middleware(
 class QuestionInput(BaseModel):
     question: str
 
+# Formato del template
 custom_prompt = ChatPromptTemplate.from_template(
     """Responde en español usando este contexto:
 {context}
@@ -30,16 +32,19 @@ Pregunta: {question}
 """
 )
 
-def prepare_input(data: dict) -> dict:
+# Pre-formateo de los datos antes de consumirlos
+def prepare_input(data: dict):
     return {"question": data["question"]}
 
-def extract_output(state: dict) -> dict:
-    return {"answer": state["answer"]}
 
+def extract_output(state: dict):
+    return state["answer"] # Este se puede mejorar
+
+# Ayuda de IA
 chain = (
     RunnablePassthrough()
     | {
-        "context": lambda x: graph.invoke({"question": x["question"]})["context"],
+        "context": lambda x: graph.invoke({"question": x["question"]})["context"], 
         "question": lambda x: x["question"]
     }
     | custom_prompt
@@ -49,7 +54,6 @@ chain = (
     | extract_output
 )
 
-# 5. Configura las rutas de LangServe
 add_routes(
     app,
     chain,
@@ -57,4 +61,4 @@ add_routes(
 )
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="localhost", port=8000)

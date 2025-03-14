@@ -10,3 +10,5 @@ sse_starlette
 pydantic
 numpy
 python-multipart
+gunicorn
+fcntl

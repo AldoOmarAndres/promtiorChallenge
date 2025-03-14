@@ -2,8 +2,6 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings
 from langchain_core.vectorstores import InMemoryVectorStore
 from langchain import hub
-from langchain.prompts.chat import ChatPromptTemplate
-from langchain.schema.runnable import Runnable
 
 #Ingestion de datos
 # Leer el archivo txt con los datos de pdf
@@ -12,7 +10,7 @@ def read_text_file(file_path):
         return f.read()
 
 #Path al archivo
-file_path = "data.txt"
+file_path = "./data.txt"
 
 text = read_text_file(file_path)
 
@@ -20,12 +18,13 @@ text = read_text_file(file_path)
 from langchain_ollama import ChatOllama
 
 llm = ChatOllama(
-    model = "llama3",
+    model = "llama3.2:1b",
     temperature = 0.8,
     num_predict = 256,
+    base_url="https://llamav2-e7bhf8d3g5epayaa.eastus-01.azurewebsites.net",
 )
 
-embeddings = OllamaEmbeddings(model="llama3")
+embeddings = OllamaEmbeddings(model="llama3.2:1b")
 
 vector_store = InMemoryVectorStore(embeddings)
 

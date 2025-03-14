@@ -1,7 +1,9 @@
 import requests
+import json
 
-url = "http://127.0.0.1:8000/chatbot"
-data = {"question": "What services does Promtior offer?"}
+url_local = "http://localhost:8000/chatbot"
+#url_app_server = "https://llama-bpe9g6g9gpd2bmbs.eastus2-01.azurewebsites.net/"
+data = {"question": "When was the company founded?"}
 
-response = requests.post(url, json=data)
-print(response.json())
+response = requests.post(url_local, json=data).json()
+print(response['answer']['answer'])

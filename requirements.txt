@@ -8,3 +8,4 @@ langserve
 uvicorn
 sse_starlette
 pydantic
+numpy

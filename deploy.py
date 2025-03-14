@@ -7,6 +7,7 @@ import uvicorn
 from model import get_graph
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_core.runnables import Runnable
+import os
 
 graph = get_graph()
 
@@ -61,4 +62,5 @@ add_routes(
 )
 
 if __name__ == "__main__":
-    uvicorn.run(app, port=8000)
+    port = int(os.environ.get("PORT", 8000))  # Azure maneja el puerto nomas
+    uvicorn.run(app, host="0.0.0.0", port=port)

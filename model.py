@@ -21,7 +21,7 @@ llm = ChatOllama(
     model = "llama3.2:1b",
     temperature = 0.8,
     num_predict = 256,
-    #base_url="https://llama.nicewave-4dff44cf.eastus.azurecontainerapps.io", # Pidiendole el modelo al Container App en Azure
+    base_url="https://llama.nicewave-4dff44cf.eastus.azurecontainerapps.io", # Pidiendole el modelo al Container App en Azure
 )
 
 embeddings = OllamaEmbeddings(model="llama3.2:1b")

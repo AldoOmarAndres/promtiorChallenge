@@ -23,7 +23,9 @@ Deploying the model was relatively straightforward (it is deployed) and accessib
 
 However, the app itself could not be deployed, as I was unable to connect the built image to Azure App Container. Even though I could access the deployed model's URL and test the chatbot before building the image, once deployed, it wouldn't work.
 
-I even created an instance of the app in Azure following the provided documentation, thinking the issue might be related to running Docker locally. However, when trying to access the service, I got no response—just a few minutes of loading followed by a disconnection due to lack of response.
+I also tried deploying the app as a **web app**, but the result was the same. Even attempting to download **Ollama** directly within the app, the error persisted, preventing the chatbot from accessing the model.
+
+Finally, I am attaching an image where I run the chatbot locally (executing the `deploy.py` file). This connects to the **app container** where the **Llama3.2:1b** model is hosted and allows interaction with it.
 
 ## Conclusion:
 The challenge was great—clearly defined and with available resources. It is frustrating not being able to complete it properly. Nonetheless, I appreciate the opportunity and remain available for any further discussions.

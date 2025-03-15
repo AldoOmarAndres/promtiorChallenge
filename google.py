@@ -1,3 +1,11 @@
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain.prompts import ChatPromptTemplate
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_core.vectorstores import InMemoryVectorStore
+from langchain import hub
+from langchain_core.documents import Document
+from typing_extensions import List, TypedDict
 from dotenv import load_dotenv
 import google.generativeai as genai
 import os
@@ -5,26 +13,6 @@ load_dotenv()
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.vectorstores import InMemoryVectorStore
-from langchain.chat_models import init_chat_model
-
-# Model
-#llm = init_chat_model("gpt-4o-mini", model_provider="openai")
-
-# Configs para el bot
-#embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
-
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain.prompts import ChatPromptTemplate
-from langchain.schema.output_parser import StrOutputParser
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-
-
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_core.vectorstores import InMemoryVectorStore
-from langchain import hub
 
 llm = ChatGoogleGenerativeAI(temperature=0.8, model='gemini-2.0-flash-001')
 embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
@@ -46,15 +34,12 @@ text = read_text_file(file_path)
 vector_store = InMemoryVectorStore(embeddings)
 
 # Dividir el texto en fragmentos manejables (valores segun tutorial)
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=300, chunk_overlap=200)
 docs = text_splitter.create_documents([text])
 all_splits = text_splitter.split_documents(docs)
 
 # Indexar los chunks
 _ = vector_store.add_documents(documents=all_splits)
-
-from langchain_core.documents import Document
-from typing_extensions import List, TypedDict
 
 
 class State(TypedDict):
@@ -84,13 +69,12 @@ graph_builder = StateGraph(State).add_sequence([retrieve, generate])
 graph_builder.add_edge(START, "retrieve")
 graph = graph_builder.compile()
 
-from langchain.schema.runnable import RunnableMap
 
+# Deploy de la app
 from fastapi import FastAPI
 from pydantic import BaseModel
 from langserve import add_routes
 import uvicorn
-import os
 
 app = FastAPI()
 
@@ -105,13 +89,13 @@ Pregunta: {question}
 """
 )
 
-# Pre-formateo de los datos antes de consumirlos
+# Formato de los datos antes y despues de la respuesta
 def prepare_input(data: dict):
     return {"question": data["question"]}
 
 
 def extract_output(state: dict):
-    return state["answer"] # Este se puede mejorar
+    return state["answer"]
 
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough
 # Ayuda de IA
@@ -136,5 +120,4 @@ add_routes(
 )
 
 if __name__ == "__main__":
-    #port = int(os.environ.get("PORT", 8000))  # Azure maneja el puerto nomas
     uvicorn.run(app, host="0.0.0.0", port=8000)

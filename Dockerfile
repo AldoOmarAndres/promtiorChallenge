@@ -1,3 +1,6 @@
+#Dejo el archivo de docker solo para mantener registro de lo que fui haciendo y las alternativas
+# que fui probando
+
 FROM python:3.10-slim
 
 WORKDIR /deploy

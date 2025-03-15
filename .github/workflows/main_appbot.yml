@@ -72,6 +72,14 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_18D2E00B1AF24B30929546C6F6884F0E }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_EDEC4DBD3F304CC282014CBA3142AE0C }}
 
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+
+      - name: Download Llama3:1B model
+        run: |
+          ollama pull llama3:1b
+      
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp

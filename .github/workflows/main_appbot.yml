@@ -78,7 +78,7 @@ jobs:
 
       - name: Download Llama3:1B model
         run: |
-          ollama pull llama3:1b
+          ollama run llama3.2:1b
       
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3

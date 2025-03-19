@@ -122,6 +122,9 @@ chain = (
     | extract_output
 )
 
+from fastapi.staticfiles import StaticFiles
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 @app.post("/ask")
 def ask_chatbot(request: QuestionInput):
     """Recibe una pregunta y devuelve la respuesta generada por el chatbot"""

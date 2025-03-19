@@ -72,11 +72,21 @@ graph = graph_builder.compile()
 
 # Deploy de la app
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from langserve import add_routes
 import uvicorn
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"]
+)
+
 
 class QuestionInput(BaseModel):
     question: str
@@ -112,6 +122,11 @@ chain = (
     | extract_output
 )
 
+@app.post("/ask")
+def ask_chatbot(request: QuestionInput):
+    """Recibe una pregunta y devuelve la respuesta generada por el chatbot"""
+    response = graph.invoke({"question": request.question})
+    return response
 
 add_routes(
     app,
